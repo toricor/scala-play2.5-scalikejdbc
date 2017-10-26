@@ -60,18 +60,62 @@ class UserController @Inject()(val messagesApi: MessagesApi) extends Controller 
   /**
    * 登録実行
    */
-  def create = TODO
+  def create = Action { implicit request =>
+    DB.localTx { implicit session =>
+      // リクエストの内容をバインド
+      userForm.bindFromRequest.fold(
+        // エラーの場合
+        error => {
+          BadRequest(views.html.user.edit(error, Companies.findAll()))
+        },
+        // OKの場合
+        form  => {
+          // ユーザを登録
+          Users.create(form.name, form.companyId)
+          // 一覧画面へリダイレクト
+          Redirect(routes.UserController.list)
+        }
+      )
+    }
+  }
 
   /**
     * 更新実行
     */
-  def update = TODO
+  def update = Action { implicit request =>
+    DB.localTx { implicit session =>
+      // リクエストの内容をバインド
+      userForm.bindFromRequest.fold(
+        // エラーの場合は登録画面に戻す
+        error => {
+          BadRequest(views.html.user.edit(error, Companies.findAll()))
+        },
+        // OKの場合は登録を行い一覧画面にリダイレクトする
+        form => {
+          // ユーザ情報を更新
+          Users.find(form.id.get).foreach { user =>
+            Users.save(user.copy(name = form.name, companyId = form.companyId))
+          }
+          // 一覧画面にリダイレクト
+          Redirect(routes.UserController.list)
+        }
+      )
+    }
+  }
 
   /**
     * 削除実行
     */
-  def remove(id: Long) = TODO
-
+  def remove(id: Long) = Action { implicit request =>
+    DB.localTx { implicit session =>
+      // ユーザを削除
+      Users.find(id).foreach { user =>
+        Users.destroy(user)
+      }
+      // 一覧画面へリダイレクト
+      Redirect(routes.UserController.list)
+    }
+  }
 }
 
 object UserController {
