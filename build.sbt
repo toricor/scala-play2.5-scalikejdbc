@@ -11,7 +11,8 @@ libraryDependencies += filters
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 
 libraryDependencies ++= Seq(
-  "com.h2database" % "h2" % "1.4.193",
+  // "com.h2database" % "h2" % "1.4.193",
+  "mysql" % "mysql-connector-java" % "5.1.44",
   "org.scalikejdbc" %% "scalikejdbc" % "2.5.1",
   "org.scalikejdbc" %% "scalikejdbc-config" % "2.5.1",
   "org.scalikejdbc" %% "scalikejdbc-play-initializer" % "2.5.1"
