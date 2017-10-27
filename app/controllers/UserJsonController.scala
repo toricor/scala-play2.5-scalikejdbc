@@ -7,47 +7,41 @@ import scalikejdbc._
 import models._
 
 
-object JsonController {
-  // UsersRowをJSONに変換するためのWrites
-  implicit val usersRowWritesFormat = new Writes[Users]{
-    def writes(user: Users): JsValue = {
-      Json.obj(
-        "id"        -> user.id,
-        "name"      -> user.name,
-        "companyId" -> user.companyId
-      )
-    }
-  }
+object UserJsonController {
+  // UserRowをJSONに変換するためのWrites
+  implicit val userRowWritesWrites = (
+      (__ \ "id"  ).write[Int] and
+        (__ \ "name").write[String]
+      )(unlift(User.unapply))
 
   // ユーザ情報を受け取るためのケースクラス
-  case class UserForm(id: Option[Long], name: String, companyId: Option[Int])
+  case class UserForm(id: Option[Int], name: String)
 
   // JSONをUserFormにへんかんするためのReadsを定義
   implicit val userFormFormat = (
-    (__ \ "id"  ).readNullable[Long] and
-      (__ \ "name").read[String]     and
-      (__ \ "companyId").readNullable[Int]
+    (__ \ "id"  ).readNullable[Int] and
+      (__ \ "name").read[String]
   )(UserForm)
 
 }
 
-class JsonController extends Controller {
+class UserJsonController extends Controller {
 
-  import JsonController._
+  import UserJsonController._
   /**
     * 一覧表示
     */
   def list = Action { implicit request =>
-    val u = Users.syntax("u")
+    val u = User.syntax("u")
 
     DB.readOnly { implicit session =>
       // ユーザのリストを取得
       val users = withSQL {
-        select.from(Users as u).orderBy(u.id.asc)
-      }.map(Users(u.resultName)).list.apply()
+        select.from(User as u).orderBy(u.id.asc)
+      }.map(User(u.resultName)).list.apply()
 
       // ユーザの一覧をJSONで返す
-      Ok(Json.obj("users" -> users))
+      Ok(Json.obj("user" -> users))
     }
   }
 
@@ -58,7 +52,7 @@ class JsonController extends Controller {
     request.body.validate[UserForm].map { form =>
       // OKの場合はユーザを登録
       DB.localTx { implicit session =>
-        Users.create(form.name, form.companyId)
+        User.create(form.name)
         Ok(Json.obj("result" -> "success"))
       }
     }.recoverTotal { e =>
@@ -74,8 +68,8 @@ class JsonController extends Controller {
     request.body.validate[UserForm].map { form =>
       // OKの場合はユーザ情報を更新
       DB.localTx { implicit session =>
-        Users.find(form.id.get).foreach { user =>
-          Users.save(user.copy(name = form.name, companyId = form.companyId))
+        User.find(form.id.get).foreach { user =>
+          User.save(user.copy(name = form.name))
         }
         Ok(Json.obj("result" -> "success"))
       }
@@ -88,11 +82,11 @@ class JsonController extends Controller {
   /**
     * ユーザ削除
     */
-  def remove(id: Long) = Action { implicit request =>
+  def remove(id: Int) = Action { implicit request =>
     DB.localTx { implicit session =>
       // ユーザを削除
-      Users.find(id).foreach { user =>
-        Users.destroy(user)
+      User.find(id).foreach { user =>
+        User.destroy(user)
       }
       Ok(Json.obj("result" -> "success"))
     }

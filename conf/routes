@@ -10,7 +10,7 @@ GET     /                           controllers.HomeController.index
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 # JSON API
-GET         /json/list              controllers.JsonController.list
-POST        /json/create            controllers.JsonController.create
-POST        /json/update            controllers.JsonController.update
-POST        /json/remove/:id        controllers.JsonController.remove(id: Long)
+GET         /json/users/list              controllers.UserJsonController.list
+POST        /json/users/create            controllers.UserJsonController.create
+POST        /json/users/update            controllers.UserJsonController.update
+POST        /json/users/remove/:id        controllers.UserJsonController.remove(id: Int)

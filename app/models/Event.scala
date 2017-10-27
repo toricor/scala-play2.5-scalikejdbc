@@ -1,8 +1,8 @@
+/*
 package models
 
 import scalikejdbc._
 import java.time.{OffsetDateTime}
-import scalikejdbc.jsr310._
 
 case class Event(
   id: Int,
@@ -167,3 +167,4 @@ object Event extends SQLSyntaxSupport[Event] {
   }
 
 }
+*/

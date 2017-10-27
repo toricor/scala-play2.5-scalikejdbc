@@ -1,3 +1,4 @@
+/*
 package models
 
 import scalikejdbc._
@@ -111,3 +112,4 @@ object Reservation extends SQLSyntaxSupport[Reservation] {
   }
 
 }
+*/
