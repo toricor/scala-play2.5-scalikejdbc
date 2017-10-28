@@ -64,7 +64,9 @@ class EventJsonController extends Controller {
       }.map(Event(u.resultName)).list.apply()
 
       // イベントの一覧をJSONで返す
-      Ok(Json.obj("contents" -> events))
+      Ok(Json.obj {
+        "contents" -> events
+      }).as("application/json; charset=utf-8")
     }
   }
 
