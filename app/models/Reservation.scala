@@ -17,8 +17,6 @@ case class Reservation(
 
 object Reservation extends SQLSyntaxSupport[Reservation] {
 
-  override val schemaName = Some("PUBLIC")
-
   override val tableName = "reservation"
 
   override val columns = Seq("id", "user_id", "event_id")

@@ -15,8 +15,6 @@ case class User(
 
 object User extends SQLSyntaxSupport[User] {
 
-  override val schemaName = Some("PUBLIC")
-
   override val tableName = "user"
 
   override val columns = Seq("id", "name")

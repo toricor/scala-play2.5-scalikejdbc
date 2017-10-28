@@ -18,7 +18,7 @@ object EventJsonController {
   // イベント情報を受け取るためのケースクラス
   case class EventForm(id: Option[Long], name: String)
 
-  // JSONをEventFormにへんかんするためのReadsを定義
+  // JSONをEventFormに変換するためのReadsを定義
   implicit val eventFormFormat = (
     (__ \ "id"  ).readNullable[Long] and
       (__ \ "name").read[String]
@@ -41,7 +41,7 @@ class EventJsonController extends Controller {
       }.map(Event(u.resultName)).list.apply()
 
       // イベントの一覧をJSONで返す
-      Ok(Json.obj("event" -> events))
+      Ok(Json.obj("contents" -> events))
     }
   }
 

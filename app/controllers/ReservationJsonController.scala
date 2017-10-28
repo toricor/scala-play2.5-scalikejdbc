@@ -42,7 +42,7 @@ class ReservationJsonController extends Controller {
       }.map(Reservation(u.resultName)).list.apply()
 
       // 予約の一覧をJSONで返す
-      Ok(Json.obj("reservation" -> reservations))
+      Ok(Json.obj("contents" -> reservations))
     }
   }
 
@@ -93,5 +93,4 @@ class ReservationJsonController extends Controller {
     }
   }
 }
-
 */

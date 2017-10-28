@@ -41,7 +41,7 @@ class UserJsonController extends Controller {
       }.map(User(u.resultName)).list.apply()
 
       // ユーザの一覧をJSONで返す
-      Ok(Json.obj("user" -> users))
+      Ok(Json.obj("contents" -> users))
     }
   }
 
