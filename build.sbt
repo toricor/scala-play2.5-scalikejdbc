@@ -12,6 +12,7 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1
 
 libraryDependencies ++= Seq(
   // "com.h2database" % "h2" % "1.4.193",
+  "joda-time" % "joda-time" % "2.9.9",
   "mysql" % "mysql-connector-java" % "5.1.44",
   "org.scalikejdbc" %% "scalikejdbc" % "2.5.1",
   "org.scalikejdbc" %% "scalikejdbc-config" % "2.5.1",

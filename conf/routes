@@ -14,3 +14,9 @@ GET         /json/users/list              controllers.UserJsonController.list
 POST        /json/users/create            controllers.UserJsonController.create
 POST        /json/users/update            controllers.UserJsonController.update
 POST        /json/users/remove/:id        controllers.UserJsonController.remove(id: Int)
+
+# JSON API
+GET         /json/events/list              controllers.EventJsonController.list
+POST        /json/events/create            controllers.EventJsonController.create
+POST        /json/events/update            controllers.EventJsonController.update
+POST        /json/events/remove/:id        controllers.EventJsonController.remove(id: Int)

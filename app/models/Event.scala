@@ -1,19 +1,18 @@
-/*
 package models
 
 import scalikejdbc._
-import java.time.{OffsetDateTime}
+import org.joda.time.DateTime
 
 case class Event(
   id: Int,
   title: String,
   description: String,
-  datetime: OffsetDateTime,
-  publish: OffsetDateTime,
   author: Int,
   place: String,
-  participants: String,
-  maxParticipants: String) {
+  participants: Int,
+  maxParticipants: Int,
+  publishedAt: DateTime,
+  createdAt: DateTime) {
 
   def save()(implicit session: DBSession = Event.autoSession): Event = Event.save(this)(session)
 
@@ -26,19 +25,19 @@ object Event extends SQLSyntaxSupport[Event] {
 
   override val tableName = "event"
 
-  override val columns = Seq("id", "title", "description", "datetime", "publish", "author", "place", "participants", "max_participants")
+  override val columns = Seq("id", "title", "description", "author", "place", "participants", "max_participants", "published_at", "created_at")
 
   def apply(e: SyntaxProvider[Event])(rs: WrappedResultSet): Event = apply(e.resultName)(rs)
   def apply(e: ResultName[Event])(rs: WrappedResultSet): Event = new Event(
     id = rs.get(e.id),
     title = rs.get(e.title),
     description = rs.get(e.description),
-    datetime = rs.get(e.datetime),
-    publish = rs.get(e.publish),
     author = rs.get(e.author),
     place = rs.get(e.place),
     participants = rs.get(e.participants),
-    maxParticipants = rs.get(e.maxParticipants)
+    maxParticipants = rs.get(e.maxParticipants),
+    publishedAt = rs.get(e.publishedAt),
+    createdAt = rs.get(e.createdAt)
   )
 
   val e = Event.syntax("e")
@@ -80,22 +79,22 @@ object Event extends SQLSyntaxSupport[Event] {
   def create(
     title: String,
     description: String,
-    datetime: OffsetDateTime,
-    publish: OffsetDateTime,
     author: Int,
     place: String,
-    participants: String,
-    maxParticipants: String)(implicit session: DBSession = autoSession): Event = {
+    participants: Int,
+    maxParticipants: Int,
+    publishedAt: DateTime,
+    createdAt: DateTime)(implicit session: DBSession = autoSession): Event = {
     val generatedKey = withSQL {
       insert.into(Event).namedValues(
         column.title -> title,
         column.description -> description,
-        column.datetime -> datetime,
-        column.publish -> publish,
         column.author -> author,
         column.place -> place,
         column.participants -> participants,
-        column.maxParticipants -> maxParticipants
+        column.maxParticipants -> maxParticipants,
+        column.publishedAt -> publishedAt,
+        column.createdAt -> createdAt
       )
     }.updateAndReturnGeneratedKey.apply()
 
@@ -103,12 +102,12 @@ object Event extends SQLSyntaxSupport[Event] {
       id = generatedKey.toInt,
       title = title,
       description = description,
-      datetime = datetime,
-      publish = publish,
       author = author,
       place = place,
       participants = participants,
-      maxParticipants = maxParticipants)
+      maxParticipants = maxParticipants,
+      publishedAt = publishedAt,
+      createdAt = createdAt)
   }
 
   def batchInsert(entities: Seq[Event])(implicit session: DBSession = autoSession): List[Int] = {
@@ -116,30 +115,30 @@ object Event extends SQLSyntaxSupport[Event] {
       Seq(
         'title -> entity.title,
         'description -> entity.description,
-        'datetime -> entity.datetime,
-        'publish -> entity.publish,
         'author -> entity.author,
         'place -> entity.place,
         'participants -> entity.participants,
-        'maxParticipants -> entity.maxParticipants))
+        'maxParticipants -> entity.maxParticipants,
+        'publishedAt -> entity.publishedAt,
+        'createdAt -> entity.createdAt))
         SQL("""insert into event(
         title,
         description,
-        datetime,
-        publish,
         author,
         place,
         participants,
-        max_participants
+        max_participants,
+        published_at,
+        created_at
       ) values (
         {title},
         {description},
-        {datetime},
-        {publish},
         {author},
         {place},
         {participants},
-        {maxParticipants}
+        {maxParticipants},
+        {publishedAt},
+        {createdAt}
       )""").batchByName(params: _*).apply[List]()
     }
 
@@ -149,12 +148,12 @@ object Event extends SQLSyntaxSupport[Event] {
         column.id -> entity.id,
         column.title -> entity.title,
         column.description -> entity.description,
-        column.datetime -> entity.datetime,
-        column.publish -> entity.publish,
         column.author -> entity.author,
         column.place -> entity.place,
         column.participants -> entity.participants,
-        column.maxParticipants -> entity.maxParticipants
+        column.maxParticipants -> entity.maxParticipants,
+        column.publishedAt -> entity.publishedAt,
+        column.createdAt -> entity.createdAt
       ).where.eq(column.id, entity.id)
     }.update.apply()
     entity
@@ -165,4 +164,3 @@ object Event extends SQLSyntaxSupport[Event] {
   }
 
 }
-*/

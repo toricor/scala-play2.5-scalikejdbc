@@ -9,7 +9,7 @@ import models._
 
 object ReservationJsonController {
   // ReservationRowをJSONに変換するためのWrites
-  implicit val userRowWritesWrites = (
+  implicit val reservationRowWritesWrites = (
     (__ \ "id"  ).write[Int] and
       (__ \ "name").write[String]
     )(unlift(Reservation.unapply))
