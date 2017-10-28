@@ -23,6 +23,7 @@ POST        /json/events/remove/:id        controllers.EventJsonController.remov
 
 # RESERVATIONS JSON API
 GET         /json/reservations/list              controllers.ReservationJsonController.list
+#GET         /json/reservations/joined_list       controllers.ReservationJsonController.joinedList
 POST        /json/reservations/create            controllers.ReservationJsonController.create
 POST        /json/reservations/update            controllers.ReservationJsonController.update
 POST        /json/reservations/remove/:id        controllers.ReservationJsonController.remove(id: Int)

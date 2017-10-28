@@ -3,16 +3,15 @@ package models
 import scalikejdbc._
 
 case class Reservation(
-  id: Int,
-  userId: Int,
-  eventId: Int) {
+                        id: Int,
+                        userId: Int,
+                        eventId: Int) {
 
   def save()(implicit session: DBSession = Reservation.autoSession): Reservation = Reservation.save(this)(session)
 
   def destroy()(implicit session: DBSession = Reservation.autoSession): Int = Reservation.destroy(this)(session)
 
 }
-
 
 object Reservation extends SQLSyntaxSupport[Reservation] {
 

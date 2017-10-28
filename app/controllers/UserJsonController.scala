@@ -22,7 +22,6 @@ object UserJsonController {
     (__ \ "id"  ).readNullable[Int] and
       (__ \ "name").read[String]
   )(UserForm)
-
 }
 
 class UserJsonController extends Controller {

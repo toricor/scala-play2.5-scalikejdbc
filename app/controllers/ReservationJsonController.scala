@@ -7,6 +7,10 @@ import scalikejdbc._
 import models._
 
 object ReservationJsonController {
+
+  // 予約情報を受け取るためのケースクラス
+  case class ReservationForm(id: Option[Int], user_id: Int, event_id: Int)
+
   // ReservationRowをJSONに変換するためのWrites
   implicit val reservationRowWritesWrites = (
     (__ \ "id"  ).write[Int] and
@@ -14,15 +18,23 @@ object ReservationJsonController {
       (__ \ "event_id").write[Int]
     )(unlift(Reservation.unapply))
 
-  // 予約情報を受け取るためのケースクラス
-  case class ReservationForm(id: Option[Int], user_id: Int, event_id: Int)
-
   // JSONをReservationFormにへんかんするためのReadsを定義
   implicit val reservationFormFormat = (
     (__ \ "id"  ).readNullable[Int] and
       (__ \ "user_id").read[Int] and
       (__ \ "event_id").read[Int]
     )(ReservationForm)
+
+  // Joined
+  // case class ReservationJoinedForm(id: Int, user_name: String, event_title: String)
+
+  /*
+  // ReservationRowをJSONに変換するためのWrites
+  implicit val reservationJoinedRowWritesWrites = (
+    (__ \ "id"  ).write[Int] and
+      (__ \ "user_name").write[String] and
+      (__ \ "event_title").write[String]
+    )(unlift(ReservationJoined.unapply))*/
 }
 
 class ReservationJsonController extends Controller {
@@ -44,6 +56,25 @@ class ReservationJsonController extends Controller {
       Ok(Json.obj("contents" -> reservations))
     }
   }
+
+  // it does not work
+  // https://github.com/scalikejdbc/scalikejdbc-cookbook/blob/master/ja/05_sql_template.md
+  /*
+  def joinedList = Action { implicit request =>
+    val (u, e, r) = (User.syntax("u"), Event.syntax("e"), Reservation.syntax("r"))
+    val reservationsWithUserAndEvent: List[(User, Event, Reservation)] =
+      sql"""
+           select ${r.result.*}, ${u.result.*}, ${e.result.*}
+           from ${Reservation.as(r)}
+           inner join ${User.as(u)} on ${r.userId} = ${u.id}
+           inner join ${Event.as(e)} on ${r.eventId} = ${e.id}
+         """
+      .map(implicit rs => (User(u.resultName), Event(e.resultName), Reservation(r.resultName)))
+      .list.apply()
+
+    // 予約の一覧をJSONで返す
+      Ok(Json.obj("contents" -> reservationsWithUserAndEvent))
+  }*/
 
   /**
     * 予約登録
