@@ -102,14 +102,16 @@ class EventJsonController extends Controller {
       // OKの場合はイベント情報を更新
       DB.localTx { implicit session =>
         Event.find(form.id.get).foreach { event =>
-          Event.save(event.copy(title           = form.title))
-          Event.save(event.copy(description     = form.description))
-          Event.save(event.copy(author          = form.author))
-          Event.save(event.copy(place           = form.place))
-          Event.save(event.copy(participants    = form.participants))
-          Event.save(event.copy(maxParticipants = form.max_participants))
-          Event.save(event.copy(publishedAt     = form.published_at))
-          Event.save(event.copy(createdAt       = form.created_at))
+          Event.save(event.copy(
+            title = form.title,
+            description = form.description,
+            author = form.author,
+            place = form.place,
+            participants    = form.participants,
+            maxParticipants = form.max_participants,
+            publishedAt     = form.published_at,
+            createdAt       = form.created_at
+          ))
         }
         Ok(Json.obj("result" -> "success"))
       }

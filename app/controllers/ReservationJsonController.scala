@@ -1,4 +1,3 @@
-/*
 package controllers
 
 import play.api.mvc._
@@ -11,19 +10,19 @@ object ReservationJsonController {
   // ReservationRowをJSONに変換するためのWrites
   implicit val reservationRowWritesWrites = (
     (__ \ "id"  ).write[Int] and
-      (__ \ "name").write[String]
+      (__ \ "user_id").write[Int] and
+      (__ \ "event_id").write[Int]
     )(unlift(Reservation.unapply))
 
-
   // 予約情報を受け取るためのケースクラス
-  case class ReservationForm(id: Option[Long], name: String)
+  case class ReservationForm(id: Option[Int], user_id: Int, event_id: Int)
 
   // JSONをReservationFormにへんかんするためのReadsを定義
   implicit val reservationFormFormat = (
-    (__ \ "id"  ).readNullable[Long] and
-      (__ \ "name").read[String]
+    (__ \ "id"  ).writeNullable[Int] and
+      (__ \ "user_id").write[Int] and
+      (__ \ "event_id").write[Int]
     )(ReservationForm)
-
 }
 
 class ReservationJsonController extends Controller {
@@ -53,7 +52,7 @@ class ReservationJsonController extends Controller {
     request.body.validate[ReservationForm].map { form =>
       // OKの場合は予約を登録
       DB.localTx { implicit session =>
-        Reservation.create(form.name)
+        Reservation.create(form.user_id, form.event_id)
         Ok(Json.obj("result" -> "success"))
       }
     }.recoverTotal { e =>
@@ -70,7 +69,7 @@ class ReservationJsonController extends Controller {
       // OKの場合は予約情報を更新
       DB.localTx { implicit session =>
         Reservation.find(form.id.get).foreach { reservation =>
-          Reservation.save(reservation.copy(name = form.name, companyId = form.companyId))
+          Reservation.save(reservation.copy(userId = form.user_id, eventId = form.event_id))
         }
         Ok(Json.obj("result" -> "success"))
       }
@@ -83,7 +82,7 @@ class ReservationJsonController extends Controller {
   /**
     * 予約削除
     */
-  def remove(id: Long) = Action { implicit request =>
+  def remove(id: Int) = Action { implicit request =>
     DB.localTx { implicit session =>
       // 予約を削除
       Reservation.find(id).foreach { reservation =>
@@ -93,4 +92,3 @@ class ReservationJsonController extends Controller {
     }
   }
 }
-*/
