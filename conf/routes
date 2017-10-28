@@ -9,14 +9,20 @@ GET     /                           controllers.HomeController.index
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-# JSON API
+# USERS JSON API
 GET         /json/users/list              controllers.UserJsonController.list
 POST        /json/users/create            controllers.UserJsonController.create
 POST        /json/users/update            controllers.UserJsonController.update
 POST        /json/users/remove/:id        controllers.UserJsonController.remove(id: Int)
 
-# JSON API
+# EVENTS JSON API
 GET         /json/events/list              controllers.EventJsonController.list
 POST        /json/events/create            controllers.EventJsonController.create
 POST        /json/events/update            controllers.EventJsonController.update
 POST        /json/events/remove/:id        controllers.EventJsonController.remove(id: Int)
+
+# RESERVATIONS JSON API
+GET         /json/reservations/list              controllers.ReservationJsonController.list
+POST        /json/reservations/create            controllers.ReservationJsonController.create
+POST        /json/reservations/update            controllers.ReservationJsonController.update
+POST        /json/reservations/remove/:id        controllers.ReservationJsonController.remove(id: Int)

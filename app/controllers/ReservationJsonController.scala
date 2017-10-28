@@ -19,9 +19,9 @@ object ReservationJsonController {
 
   // JSONをReservationFormにへんかんするためのReadsを定義
   implicit val reservationFormFormat = (
-    (__ \ "id"  ).writeNullable[Int] and
-      (__ \ "user_id").write[Int] and
-      (__ \ "event_id").write[Int]
+    (__ \ "id"  ).readNullable[Int] and
+      (__ \ "user_id").read[Int] and
+      (__ \ "event_id").read[Int]
     )(ReservationForm)
 }
 
